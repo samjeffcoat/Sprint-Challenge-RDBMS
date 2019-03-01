@@ -5,7 +5,7 @@ const knex = require("knex");
 const knexConfig = require("../knexfile");
 
 const db = knex(knexConfig.development);
-
+// Post a project
 router.post("/", (req, res) => {
   db("projects")
     .insert(req.body)
@@ -21,4 +21,17 @@ router.post("/", (req, res) => {
       res.status(500).json(err);
     });
 });
+// Get a project
+router.get("/", (req, res) => {
+  db("projects")
+    .then(projects => {
+      res.status(200).json(projects);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+// get projects by Id
+
 module.exports = router;

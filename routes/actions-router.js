@@ -5,7 +5,7 @@ const knex = require("knex");
 const knexConfig = require("../knexfile");
 
 const db = knex(knexConfig.development);
-
+//ability to post action
 router.post("/", (req, res) => {
   db("actions")
     .insert(req.body)
