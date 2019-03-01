@@ -34,4 +34,42 @@ router.get("/", (req, res) => {
 
 // get projects by Id
 
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+  db("projects")
+    .where("projects.id", id)
+    .then(project => {
+      const newProject = project[0];
+      db("actions")
+        .select(
+          "actions.id",
+          "actions.description",
+          "actions.notes",
+          "actions.is_complete",
+          "actions.project_id"
+        )
+        .where("actions.project_id", id)
+        .then(actions => {
+          if (!newProject) {
+            res
+              .status(404)
+              .json({ err: "A Project with that id cannot be found" });
+          } else {
+            res.json({
+              id: newProject.id,
+              name: newProject.name,
+              description: newProject.description,
+              is_complete: newProject.is_complete,
+              actions: actions
+            });
+          }
+        });
+    })
+    .catch(() => {
+      res
+        .status(404)
+        .json({ error: "Info about that project cannot be retrieved" });
+    });
+});
+
 module.exports = router;
